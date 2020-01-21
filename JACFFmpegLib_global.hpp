@@ -15,4 +15,14 @@
 #  define JACFFMPEGLIB_EXPORT Q_DECL_IMPORT
 #endif
 
+extern "C"
+{
+    #include "libavformat/avformat.h"
+    #include "libavcodec/avcodec.h"
+    #include "libavutil/avutil.h"
+    #include "libavfilter/avfilter.h"
+    #include "libswscale/swscale.h"
+    #include "libswresample/swresample.h"
+}
+
 #endif // JACFFMPEGLIB_GLOBAL_HPP

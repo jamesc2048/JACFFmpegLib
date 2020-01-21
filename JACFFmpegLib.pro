@@ -23,6 +23,13 @@ HEADERS += \
     JACFFmpegLib_global.hpp \
     jacffmpeglib.hpp
 
+# On Linux rely on finding in standard paths. Install FFmpeg devel package
+win32: LIBS += -L$$PWD/FFmpeg_libs/lib/
+LIBS += -lavcodec -lavformat -lavfilter -lavutil -lswscale -lswresample
+
+INCLUDEPATH += $$PWD/FFmpeg_libs/include
+DEPENDPATH += $$PWD/FFmpeg_libs/include
+
 # Default rules for deployment.
 unix {
     target.path = /usr/lib
