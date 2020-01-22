@@ -16,6 +16,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+*g++ {
+   #message("Adding -Werror for G++")
+   QMAKE_CXXFLAGS += -Werror
+}
+
+win32-msvc* {
+   #message("Adding /WX for MSVC")
+   QMAKE_CXXFLAGS += /WX
+}
+
 SOURCES += \
     jacffmpeglib.cpp
 
@@ -24,13 +34,21 @@ HEADERS += \
     jacffmpeglib.hpp
 
 # On Linux rely on finding in standard paths. Install FFmpeg devel package
-win32: LIBS += -L$$PWD/FFmpeg_libs/lib/
+win32 {
+    LIBS += -L$$PWD/FFmpeg_libs/lib/
+}
+
 LIBS += -lavcodec -lavformat -lavfilter -lavutil -lswscale -lswresample
 
 INCLUDEPATH += $$PWD/FFmpeg_libs/include
 DEPENDPATH += $$PWD/FFmpeg_libs/include
 
-# Default rules for deployment.
+# Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
+# On Linux FFmpeg binaries should be in standard paths
+win32 {
+    QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/FFmpeg_libs/bin/*.dll)) $$shell_quote($$shell_path($$OUT_PWD))
+    target.path = $$PWD/install
+}
 unix {
     target.path = /usr/lib
 }
