@@ -9,6 +9,7 @@ namespace JACFFmpegLib
     {
     private:
         AVPacketPtr packet;
+        AVMediaType codecType = AVMediaType::AVMEDIA_TYPE_UNKNOWN;
 
     public:
         JACFFMPEGLIB_EXPORT Packet();
@@ -16,6 +17,9 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT Packet(AVPacketPtr packet);
 
         JACFFMPEGLIB_EXPORT AVPacketPtr& getAVPacket();
+        JACFFMPEGLIB_EXPORT void setCodecType(AVMediaType codecType);
+        JACFFMPEGLIB_EXPORT AVMediaType getCodecType();
+        JACFFMPEGLIB_EXPORT size_t getStreamIndex();
 
         DISALLOW_COPY(Packet)
         Packet(Packet &&) = default;

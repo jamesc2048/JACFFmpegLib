@@ -18,6 +18,21 @@ namespace JACFFmpegLib
         return packet;
     }
 
+    void Packet::setCodecType(AVMediaType codecType)
+    {
+        this->codecType = codecType;
+    }
+
+    AVMediaType Packet::getCodecType()
+    {
+        return codecType;
+    }
+
+    size_t Packet::getStreamIndex()
+    {
+        return packet->stream_index;
+    }
+
     Packet::Packet()
     {
         packet = make_avpacket(av_packet_alloc());

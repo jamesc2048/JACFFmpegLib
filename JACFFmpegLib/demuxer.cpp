@@ -79,6 +79,9 @@ namespace JACFFmpegLib
             LOG(error);
         }
 
+        // Only the demuxer knows this, useful to have in the Packet itself.
+        packet.setCodecType(streams[packet.getStreamIndex()].codecType());
+
         return packet;
     }
 
