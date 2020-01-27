@@ -18,37 +18,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 *g++ {
    #message("Adding -Werror for G++")
-   QMAKE_CXXFLAGS += -Werror
+   QMAKE_CXXFLAGS += -Werror -Wall
 }
 
 win32-msvc* {
    #message("Adding /WX for MSVC")
-   QMAKE_CXXFLAGS += /WX
+   QMAKE_CXXFLAGS += /W3 /WX
 }
 
+PRECOMPILED_HEADER += pch.hpp
+
 SOURCES += \
-    jacffmpeglib.cpp
+    demuxer.cpp \
+    packet.cpp \
+    stream.cpp \
+    utilities.cpp
 
 HEADERS += \
-    JACFFmpegLib_global.hpp \
-    jacffmpeglib.hpp
+    demuxer.hpp \
+    packet.hpp \
+    pch.hpp \
+    stream.hpp \
+    utilities.hpp
 
-# On Linux rely on finding in standard paths. Install FFmpeg devel package
+# On Linux rely on finding in standard paths. Install FFmpeg devel packages
+# Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
+# On Linux FFmpeg binaries should be in standard paths
 win32 {
-    LIBS += -L$$PWD/FFmpeg_libs/lib/
+    LIBS += -L$$PWD/../FFmpeg_libs/lib/
+    INCLUDEPATH += $$PWD/../FFmpeg_libs/include
+    DEPENDPATH += $$PWD/../FFmpeg_libs/include
+    #QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/FFmpeg_libs/bin/*.dll)) $$shell_quote($$shell_path($$OUT_PWD))
+    target.path = $$PWD/install
 }
 
 LIBS += -lavcodec -lavformat -lavfilter -lavutil -lswscale -lswresample
 
-INCLUDEPATH += $$PWD/FFmpeg_libs/include
-DEPENDPATH += $$PWD/FFmpeg_libs/include
-
-# Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
-# On Linux FFmpeg binaries should be in standard paths
-win32 {
-    QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/FFmpeg_libs/bin/*.dll)) $$shell_quote($$shell_path($$OUT_PWD))
-    target.path = $$PWD/install
-}
 unix {
     target.path = /usr/lib
 }
