@@ -26,8 +26,6 @@ win32-msvc* {
    QMAKE_CXXFLAGS += /W3 /WX
 }
 
-PRECOMPILED_HEADER += pch.hpp
-
 SOURCES += \
     demuxer.cpp \
     packet.cpp \
@@ -35,6 +33,7 @@ SOURCES += \
     utilities.cpp
 
 HEADERS += \
+    common.hpp \
     demuxer.hpp \
     packet.hpp \
     pch.hpp \
@@ -45,6 +44,7 @@ HEADERS += \
 # Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
 # On Linux FFmpeg binaries should be in standard paths
 win32 {
+    PRECOMPILED_HEADER += pch.hpp
     LIBS += -L$$PWD/../FFmpeg_libs/lib/
     INCLUDEPATH += $$PWD/../FFmpeg_libs/include
     DEPENDPATH += $$PWD/../FFmpeg_libs/include

@@ -1,6 +1,11 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include "pch.hpp"
+
+using std::string;
+using std::unique_ptr;
+
 namespace JACFFmpegLib
 {
     namespace Utils

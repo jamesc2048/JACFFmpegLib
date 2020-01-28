@@ -1,7 +1,7 @@
 #ifndef PACKET_HPP
 #define PACKET_HPP
 
-#include "pch.hpp"
+#include "common.hpp"
 
 namespace JACFFmpegLib
 {

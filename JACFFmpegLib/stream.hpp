@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.hpp"
+#include "common.hpp"
 
 namespace JACFFmpegLib
 {

@@ -12,7 +12,7 @@ namespace JACFFmpegLib
 
         void log(const std::string &message)
         {
-            av_log(nullptr, AV_LOG_INFO, message.c_str());
+            av_log(nullptr, AV_LOG_INFO, "%s", message.c_str());
         }
 
         int64_t secondsToTimestamp(double secs, AVRational timebase)
