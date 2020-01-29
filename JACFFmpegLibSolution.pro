@@ -3,4 +3,4 @@ TEMPLATE = subdirs
 SUBDIRS += JACFFmpegLib \
     TestProject
 
-# TODO CMAKE!
+TestProject.depends += JACFFmpegLib

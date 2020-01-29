@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <memory>
+#include <optional>
 
 extern "C"
 {

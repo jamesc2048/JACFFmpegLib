@@ -17,6 +17,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
+# On Linux rely on finding in standard paths. Install FFmpeg devel packages
+# Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
+# On Linux FFmpeg binaries should be in standard paths
+win32 {
+    LIBS += -L$$PWD/../FFmpeg_libs/lib/
+    INCLUDEPATH += $$PWD/../FFmpeg_libs/include $$PWD/../JACFFmpegLib
+    DEPENDPATH += $$PWD/../FFmpeg_libs/include $$PWD/../JACFFmpegLib
+    #QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/FFmpeg_libs/bin/*.dll)) $$shell_quote($$shell_path($$OUT_PWD))
+    target.path = $$PWD/install
+}
+
+CONFIG(debug, debug|release) {
+    LIBS += -L$$PWD/../JACFFmpegLib/debug/
+}
+else {
+    LIBS += -L$$PWD/../JACFFmpegLib/release/
+}
+
+LIBS += -lavcodec -lavformat -lavfilter -lavutil -lswscale -lswresample -lJACFFmpegLib
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

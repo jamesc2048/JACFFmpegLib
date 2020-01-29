@@ -22,10 +22,15 @@ using std::string;
 using std::stringstream;
 using std::vector;
 using std::unique_ptr;
+using std::shared_ptr;
+using std::weak_ptr;
 using std::make_unique;
+using std::make_shared;
+using std::optional;
 
-#define THROW_EXCEPTION(what) throw std::runtime_error(what)
+#define THROW_EXCEPTION(what) JACFFmpegLib::Utils::log(what), throw std::runtime_error(what);
 
+// TODO maybe integrate tinyformat for this? currently inefficient concat
 #define LOG(message) JACFFmpegLib::Utils::log(message)
 
 #define DISALLOW_COPY(className) className(const className &) = delete; \

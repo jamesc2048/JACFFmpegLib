@@ -10,18 +10,23 @@ namespace JACFFmpegLib
     class Demuxer
     {
     private:
-        AVFormatContext* formatCtx;
+        AVFormatContext* formatCtx = nullptr;
 
         string url;
-        vector<Stream> streams;
+        vector<shared_ptr<Stream>> streams;
         bool eosFlag = false;
-        int bestVideoStreamIndex = -1;
-        int bestAudioStreamIndex = -1;
+        int bestVideoStreamIndex = AVERROR_STREAM_NOT_FOUND;
+        int bestAudioStreamIndex = AVERROR_STREAM_NOT_FOUND;
 
     public:
         JACFFMPEGLIB_EXPORT Demuxer(string url);
         JACFFMPEGLIB_EXPORT ~Demuxer();
 
+        JACFFMPEGLIB_EXPORT const vector<shared_ptr<Stream>>& getStreams();
+        JACFFMPEGLIB_EXPORT bool hasVideo();
+        JACFFMPEGLIB_EXPORT bool hasAudio();
+        JACFFMPEGLIB_EXPORT weak_ptr<Stream> getBestVideoStream();
+        JACFFMPEGLIB_EXPORT weak_ptr<Stream> getBestAudioStream();
         JACFFMPEGLIB_EXPORT bool isEOS();
         JACFFMPEGLIB_EXPORT Packet nextPacket();
         JACFFMPEGLIB_EXPORT bool seekToKeyframe(double seconds);

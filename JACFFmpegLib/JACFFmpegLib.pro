@@ -33,12 +33,21 @@ SOURCES += \
     utilities.cpp
 
 HEADERS += \
+    JACFFmpegLib.hpp \
     common.hpp \
     demuxer.hpp \
     packet.hpp \
     pch.hpp \
     stream.hpp \
     utilities.hpp
+
+CONFIG(debug, debug|release) {
+    DESTDIR = $$OUT_PWD/debug
+} else {
+    DESTDIR = $$OUT_PWD/release
+}
+
+OBJECTS_DIR = $$OUT_PWD/obj
 
 # On Linux rely on finding in standard paths. Install FFmpeg devel packages
 # Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this

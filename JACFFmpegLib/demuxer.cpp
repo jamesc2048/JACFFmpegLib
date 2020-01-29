@@ -5,12 +5,19 @@ namespace JACFFmpegLib
     Demuxer::Demuxer(string url)
         : url(url)
     {
+        formatCtx = avformat_alloc_context();
+
+        if (!formatCtx)
+        {
+            THROW_EXCEPTION("Failed to allocate format context");
+        }
+
         int ret = avformat_open_input(&formatCtx, url.c_str(), nullptr, nullptr);
 
         if (ret < 0)
         {
             string error = Utils::avErrorToStr(ret);
-            THROW_EXCEPTION("Failed to open url %s");
+            THROW_EXCEPTION("Failed to open url");
         }
 
         ret = avformat_find_stream_info(formatCtx, nullptr);
@@ -31,21 +38,11 @@ namespace JACFFmpegLib
         bestVideoStreamIndex = av_find_best_stream(formatCtx, AVMediaType::AVMEDIA_TYPE_VIDEO, -1, 0, nullptr, 0);
         bestAudioStreamIndex = av_find_best_stream(formatCtx, AVMediaType::AVMEDIA_TYPE_AUDIO, -1, 0, nullptr, 0);
 
-        if (bestVideoStreamIndex != AVERROR_STREAM_NOT_FOUND)
-        {
-            // We have video
-        }
-
-        if (bestAudioStreamIndex != AVERROR_STREAM_NOT_FOUND)
-        {
-            // We have audio
-        }
-
-        // TODO subtitles
+        // TODO subtitles?
 
         for (size_t i = 0; i < formatCtx->nb_streams; i++)
         {
-            streams.emplace_back(formatCtx->streams[i]);
+            streams.emplace_back(make_shared<Stream>(formatCtx->streams[i]));
         }
     }
 
@@ -55,6 +52,41 @@ namespace JACFFmpegLib
         {
             avformat_close_input(&formatCtx);
         }
+    }
+
+    const vector<shared_ptr<Stream>>& Demuxer::getStreams()
+    {
+        return streams;
+    }
+
+    bool Demuxer::hasVideo()
+    {
+        return bestVideoStreamIndex >= 0;
+    }
+
+    bool Demuxer::hasAudio()
+    {
+        return bestAudioStreamIndex >= 0;
+}
+
+    weak_ptr<Stream> Demuxer::getBestVideoStream()
+    {
+        if (bestVideoStreamIndex == AVERROR_STREAM_NOT_FOUND)
+        {
+            return {};
+        }
+
+        return streams[bestVideoStreamIndex];
+    }
+
+    weak_ptr<Stream> Demuxer::getBestAudioStream()
+    {
+        if (bestAudioStreamIndex == AVERROR_STREAM_NOT_FOUND)
+        {
+            return {};
+        }
+
+        return streams[bestAudioStreamIndex];
     }
 
     bool Demuxer::isEOS()
@@ -75,12 +107,15 @@ namespace JACFFmpegLib
         }
         else if (ret < 0)
         {
+            // Not necessarily a fatal error
             string error = Utils::avErrorToStr(ret);
             LOG(error);
         }
 
         // Only the demuxer knows this, useful to have in the Packet itself.
-        packet.setCodecType(streams[packet.getStreamIndex()].codecType());
+        packet.setCodecType(streams[packet.getStreamIndex()]->codecType());
+        // Store weak reference to Stream object which itself contains AVStream pointer.
+        packet.setStreamRef(streams[packet.getStreamIndex()]);
 
         return packet;
     }
@@ -90,7 +125,7 @@ namespace JACFFmpegLib
         // using stream 0 for this
         size_t streamIndex = 0;
 
-        AVRational tb = streams[streamIndex].timeBase();
+        AVRational tb = streams[streamIndex]->timeBase();
 
         int64_t streamTimestamp = Utils::secondsToTimestamp(seconds, tb);
 

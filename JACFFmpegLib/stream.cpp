@@ -11,15 +11,26 @@ namespace JACFFmpegLib
         }
     }
 
+    int Stream::streamIndex()
+    {
+        return stream->index;
+    }
+
     Stream::~Stream()
     {
         // Do not delete stream ptr: it is owned by a AVFormatContext
     }
 
     // General AVStream properties
-    AVMediaType Stream::codecType() { return stream->codecpar->codec_type; }
+    AVMediaType Stream::codecType()
+    {
+        return stream->codecpar->codec_type;
+    }
 
-    uint32_t Stream::codecTag() { return stream->codecpar->codec_tag; }
+    uint32_t Stream::codecTag()
+    {
+        return stream->codecpar->codec_tag;
+    }
 
     std::string Stream::codecTagString()
     {
@@ -32,6 +43,8 @@ namespace JACFFmpegLib
 
         return { chars };
     }
+
+
 
     AVCodecID Stream::codecId()
     {
@@ -66,60 +79,42 @@ namespace JACFFmpegLib
     // Video-only properties
     int Stream::width()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return stream->codecpar->width;
     }
 
     int Stream::height()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return stream->codecpar->height;
     }
 
     AVPixelFormat Stream::pixelFormat()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return static_cast<AVPixelFormat>(stream->codecpar->format);
     }
 
     AVRational Stream::sampleAspectRatio()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return stream->codecpar->sample_aspect_ratio;
     }
 
     AVRational Stream::frameRate()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return stream->avg_frame_rate;
     }
 
     AVRational Stream::baseFrameRate()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
-        {
-            THROW_EXCEPTION("Cannot access Video property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
 
         return stream->r_frame_rate;
     }
@@ -127,30 +122,21 @@ namespace JACFFmpegLib
     // Audio-only properties
     AVSampleFormat Stream::sampleFormat()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_AUDIO)
-        {
-            THROW_EXCEPTION("Cannot access Audio property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_AUDIO);
 
         return static_cast<AVSampleFormat>(stream->codecpar->format);
     }
 
     int Stream::sampleRate()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_AUDIO)
-        {
-            THROW_EXCEPTION("Cannot access Audio property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_AUDIO);
 
         return stream->codecpar->sample_rate;
     }
 
     int Stream::channels()
     {
-        if (codecType() != AVMediaType::AVMEDIA_TYPE_AUDIO)
-        {
-            THROW_EXCEPTION("Cannot access Audio property on stream type %s");
-        }
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_AUDIO);
 
         return stream->codecpar->channels;
     }

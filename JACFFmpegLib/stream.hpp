@@ -2,6 +2,12 @@
 
 #include "common.hpp"
 
+#define CHECK_MEDIA_TYPE(mediaType) \
+    if (codecType() != mediaType) \
+    { \
+        THROW_EXCEPTION("Cannot access Video property on stream type %s"); \
+    }
+
 namespace JACFFmpegLib
 {
     class Stream
@@ -11,10 +17,14 @@ namespace JACFFmpegLib
 
     public:
         JACFFMPEGLIB_EXPORT Stream(AVStream *stream);
-        JACFFMPEGLIB_EXPORT virtual ~Stream();
+        JACFFMPEGLIB_EXPORT ~Stream();
+        JACFFMPEGLIB_EXPORT Stream(const Stream &) = default;
+        JACFFMPEGLIB_EXPORT Stream& operator=(const Stream &) = default;
         JACFFMPEGLIB_EXPORT Stream(Stream &&) = default;
         JACFFMPEGLIB_EXPORT Stream& operator=(Stream &&) = default;
 
+
+        JACFFMPEGLIB_EXPORT int streamIndex();
         JACFFMPEGLIB_EXPORT AVMediaType codecType();
         JACFFMPEGLIB_EXPORT uint32_t codecTag();
         JACFFMPEGLIB_EXPORT string codecTagString();
@@ -39,8 +49,6 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT AVSampleFormat sampleFormat();
         JACFFMPEGLIB_EXPORT int sampleRate();
         JACFFMPEGLIB_EXPORT int channels();
-
-        DISALLOW_COPY(Stream)
     };
 
 //    class VideoStream : Stream
