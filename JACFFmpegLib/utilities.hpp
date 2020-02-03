@@ -28,7 +28,10 @@ namespace JACFFmpegLib
         void operator()(AVFrame *frame);
     };
 
+    using AVFramePtr = unique_ptr<AVFrame, AVFrameDeleter>;
+
     AVPacketPtr make_avpacket(AVPacket *packet);
+    AVFramePtr make_avframe(AVFrame *frame);
 }
 
 #endif // UTILITIES_H

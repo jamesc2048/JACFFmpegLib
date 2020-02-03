@@ -43,6 +43,8 @@ namespace JACFFmpegLib
 
     bool Packet::hasData()
     {
+        assert(packet);
+
         // Note that packet will always be non-null (unless somebody sets it to null...)
         return packet->size > 0 && packet->data;
     }
@@ -50,6 +52,16 @@ namespace JACFFmpegLib
     void Packet::setCodecType(AVMediaType codecType)
     {
         this->codecType = codecType;
+    }
+
+    AVCodecID Packet::getCodecId()
+    {
+        return codecId;
+    }
+
+    void Packet::setCodecId(AVCodecID codecId)
+    {
+        this->codecId = codecId;
     }
 
     std::weak_ptr<Stream> Packet::getStreamRef()

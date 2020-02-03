@@ -27,8 +27,10 @@ using std::weak_ptr;
 using std::make_unique;
 using std::make_shared;
 using std::optional;
+using std::move;
+using std::thread;
 
-#define THROW_EXCEPTION(what) JACFFmpegLib::Utils::log(what), throw std::runtime_error(what);
+#define THROW_EXCEPTION(what) do { JACFFmpegLib::Utils::log(what); throw std::runtime_error(what); } while (false)
 
 // TODO maybe integrate tinyformat for this? currently inefficient concat
 #define LOG(message) JACFFmpegLib::Utils::log(message)

@@ -28,18 +28,22 @@ win32-msvc* {
 
 SOURCES += \
     demuxer.cpp \
+    frame.cpp \
     packet.cpp \
     stream.cpp \
-    utilities.cpp
+    utilities.cpp \
+    videodecoder.cpp
 
 HEADERS += \
     JACFFmpegLib.hpp \
     common.hpp \
     demuxer.hpp \
+    frame.hpp \
     packet.hpp \
     pch.hpp \
     stream.hpp \
-    utilities.hpp
+    utilities.hpp \
+    videodecoder.hpp
 
 CONFIG(debug, debug|release) {
     DESTDIR = $$OUT_PWD/debug

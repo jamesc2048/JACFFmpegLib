@@ -6,6 +6,8 @@
 #include <vector>
 #include <memory>
 #include <optional>
+#include <thread>
+#include <cassert>
 
 extern "C"
 {

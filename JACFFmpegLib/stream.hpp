@@ -24,31 +24,34 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT Stream& operator=(Stream &&) = default;
 
 
-        JACFFMPEGLIB_EXPORT int streamIndex();
-        JACFFMPEGLIB_EXPORT AVMediaType codecType();
-        JACFFMPEGLIB_EXPORT uint32_t codecTag();
-        JACFFMPEGLIB_EXPORT string codecTagString();
-        JACFFMPEGLIB_EXPORT AVCodecID codecId();
-        JACFFMPEGLIB_EXPORT int64_t duration();
-        JACFFMPEGLIB_EXPORT double durationSeconds();
-        JACFFMPEGLIB_EXPORT int64_t bitrate();
-        JACFFMPEGLIB_EXPORT AVRational timeBase();
-        JACFFMPEGLIB_EXPORT int64_t frameCount();
+        JACFFMPEGLIB_EXPORT int streamIndex() const;
+        JACFFMPEGLIB_EXPORT AVMediaType codecType() const;
+        JACFFMPEGLIB_EXPORT uint32_t codecTag() const;
+        JACFFMPEGLIB_EXPORT string codecTagString() const;
+        JACFFMPEGLIB_EXPORT AVCodecID codecId() const;
+        JACFFMPEGLIB_EXPORT int64_t duration() const;
+        JACFFMPEGLIB_EXPORT double durationSeconds() const;
+        JACFFMPEGLIB_EXPORT int64_t bitrate() const;
+        JACFFMPEGLIB_EXPORT AVRational timeBase() const;
+        JACFFMPEGLIB_EXPORT int64_t frameCount() const;
 
         // TODO side data
 
         // Video
-        JACFFMPEGLIB_EXPORT int width();
-        JACFFMPEGLIB_EXPORT int height();
-        JACFFMPEGLIB_EXPORT AVPixelFormat pixelFormat();
-        JACFFMPEGLIB_EXPORT AVRational sampleAspectRatio();
-        JACFFMPEGLIB_EXPORT AVRational frameRate();
-        JACFFMPEGLIB_EXPORT AVRational baseFrameRate();
+        JACFFMPEGLIB_EXPORT int width() const;
+        JACFFMPEGLIB_EXPORT int height() const;
+        JACFFMPEGLIB_EXPORT AVPixelFormat pixelFormat() const;
+        JACFFMPEGLIB_EXPORT AVRational sampleAspectRatio() const;
+        JACFFMPEGLIB_EXPORT AVRational frameRate() const;
+        JACFFMPEGLIB_EXPORT AVRational baseFrameRate() const;
 
         // Audio
-        JACFFMPEGLIB_EXPORT AVSampleFormat sampleFormat();
-        JACFFMPEGLIB_EXPORT int sampleRate();
-        JACFFMPEGLIB_EXPORT int channels();
+        JACFFMPEGLIB_EXPORT AVSampleFormat sampleFormat() const;
+        JACFFMPEGLIB_EXPORT int sampleRate() const;
+        JACFFMPEGLIB_EXPORT int channels() const;
+
+        // Internal
+        AVCodecParameters* codecParams() const;
     };
 
 //    class VideoStream : Stream

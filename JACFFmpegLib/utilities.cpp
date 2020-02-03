@@ -47,4 +47,9 @@ namespace JACFFmpegLib
             av_frame_free(&frame);
         }
     }
+
+    AVFramePtr make_avframe(AVFrame *frame)
+    {
+        return AVFramePtr(frame);
+    }
 }

@@ -4,21 +4,25 @@ using namespace JACFFmpegLib;
 
 #include <string>
 #include <QtCore>
+#include <iostream>
+#include <fstream>
 
 int main(int argc, char *argv[])
 {
     try
     {
         // Testing code
-        Demuxer dem("D:\\1.mp4");
+        unique_ptr<Demuxer> dem = make_unique<Demuxer>(R"(\\gb.evcam.com\private$\users\James.Crisafulli\Documents\1hourPAL.mp4)");
 
         int count = 0;
 
         vector<Packet> clones;
 
-        while (!dem.isEOS())
+        unique_ptr<VideoDecoder> dec;
+
+        while (!dem->isEOS())
         {
-            Packet p = dem.nextPacket();
+            Packet p = dem->nextPacket();
 
             if (p.hasData())
             {
@@ -39,7 +43,7 @@ int main(int argc, char *argv[])
                         break;
                 }
 
-                qDebug() << packetName  << p.getStreamIndex() << count++;
+                qDebug() << packetName  << p.getStreamIndex() << count;
 
                 // if Demuxer object is still alive
                 if (shared_ptr<Stream> ptr = p.getStreamRef().lock())
@@ -47,6 +51,11 @@ int main(int argc, char *argv[])
                     if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_VIDEO)
                     {
                         qDebug() << ptr->width() << ptr->height() << ptr->codecTagString().c_str();
+
+                        if (!dec)
+                        {
+                            dec = make_unique<VideoDecoder>(*ptr);
+                        }
                     }
                     else if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_AUDIO)
                     {
@@ -56,6 +65,21 @@ int main(int argc, char *argv[])
                 else
                 {
                     qDebug() << "Stream ref is null";
+                }
+
+                if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_VIDEO && dec)
+                {
+                    FrameList frames = dec->decodePacket(p);
+                    qDebug() << "Decoded " << frames.size() << " frames";
+
+                    if (frames.size())
+                    {
+                        QFile f("D:\\out.yuv");
+                        f.open(QIODevice::WriteOnly | QIODevice::Append);
+
+                        vector<uint8_t> bytes = frames[0].dumpToBytes();
+                        f.write((const char*)bytes.data(), bytes.size());
+                    }
                 }
             }
         }

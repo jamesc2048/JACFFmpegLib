@@ -114,6 +114,8 @@ namespace JACFFmpegLib
 
         // Only the demuxer knows this, useful to have in the Packet itself.
         packet.setCodecType(streams[packet.getStreamIndex()]->codecType());
+        packet.setCodecId(streams[packet.getStreamIndex()]->codecId());
+
         // Store weak reference to Stream object which itself contains AVStream pointer.
         packet.setStreamRef(streams[packet.getStreamIndex()]);
 

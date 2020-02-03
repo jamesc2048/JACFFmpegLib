@@ -11,6 +11,7 @@ namespace JACFFmpegLib
     private:
         AVPacketPtr packet;
         AVMediaType codecType = AVMediaType::AVMEDIA_TYPE_UNKNOWN;
+        AVCodecID codecId = AVCodecID::AV_CODEC_ID_NONE;
         weak_ptr<Stream> streamRef;
 
     public:
@@ -27,6 +28,8 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT size_t getStreamIndex();
         JACFFMPEGLIB_EXPORT AVMediaType getCodecType();
         JACFFMPEGLIB_EXPORT void setCodecType(AVMediaType codecType);
+        JACFFMPEGLIB_EXPORT AVCodecID getCodecId();
+        JACFFMPEGLIB_EXPORT void setCodecId(AVCodecID codecId);
         JACFFMPEGLIB_EXPORT weak_ptr<Stream> getStreamRef();
 
         JACFFMPEGLIB_EXPORT Packet clone();
