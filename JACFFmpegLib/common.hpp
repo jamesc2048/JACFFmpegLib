@@ -43,4 +43,10 @@ using std::thread;
                                         className& operator=(className &&) = delete;
 
 
+#define CHECK_MEDIA_TYPE(mt) \
+    if (mediaType() != mt) \
+    { \
+        THROW_EXCEPTION("Cannot access mismatched property on stream type %s"); \
+    }
+
 #endif // COMMON_HPP

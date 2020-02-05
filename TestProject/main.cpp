@@ -7,89 +7,66 @@ using namespace JACFFmpegLib;
 #include <iostream>
 #include <fstream>
 
-int main(int argc, char *argv[])
+void videoDecodeBenchmark()
 {
+    int count = 0;
+    int64_t startMs = QDateTime::currentMSecsSinceEpoch();
+
     try
     {
-        // Testing code
-        unique_ptr<Demuxer> dem = make_unique<Demuxer>(R"(\\gb.evcam.com\private$\users\James.Crisafulli\Documents\1hourPAL.mp4)");
+        unique_ptr<Demuxer> demuxer = make_unique<Demuxer>("D:\\1hourPAL.mp4");
 
-        int count = 0;
+        unique_ptr<VideoDecoder> decoder;
 
-        vector<Packet> clones;
-
-        unique_ptr<VideoDecoder> dec;
-
-        while (!dem->isEOS())
+        while (!demuxer->isEOS())
         {
-            Packet p = dem->nextPacket();
+            Packet p = demuxer->nextPacket();
 
-            if (p.hasData())
+            if (p.hasData() && p.mediaType() == AVMediaType::AVMEDIA_TYPE_VIDEO)
             {
-                QString packetName;
-
-                switch (p.getCodecType())
+                if (!decoder)
                 {
-                    case AVMediaType::AVMEDIA_TYPE_VIDEO:
-                        packetName = "Video Packet";
-                        break;
-
-                    case AVMediaType::AVMEDIA_TYPE_AUDIO:
-                        packetName = "Audio Packet";
-                        break;
-
-                    default:
-                        packetName = "Unknown Packet";
-                        break;
-                }
-
-                qDebug() << packetName  << p.getStreamIndex() << count;
-
-                // if Demuxer object is still alive
-                if (shared_ptr<Stream> ptr = p.getStreamRef().lock())
-                {
-                    if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_VIDEO)
+                    if (shared_ptr<Stream> stream = p.streamRef().lock())
                     {
-                        qDebug() << ptr->width() << ptr->height() << ptr->codecTagString().c_str();
-
-                        if (!dec)
-                        {
-                            dec = make_unique<VideoDecoder>(*ptr);
-                        }
+                        decoder = make_unique<VideoDecoder>(*stream);
                     }
-                    else if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_AUDIO)
+                    else
                     {
-                        qDebug() << ptr->codecTagString().c_str();
+                        throw std::runtime_error("Demuxer not present");
                     }
                 }
-                else
+
+                FrameList frames = decoder->decodePacket(p);
+
+                for (auto &fr : frames)
                 {
-                    qDebug() << "Stream ref is null";
-                }
-
-                if (p.getCodecType() == AVMediaType::AVMEDIA_TYPE_VIDEO && dec)
-                {
-                    FrameList frames = dec->decodePacket(p);
-                    qDebug() << "Decoded " << frames.size() << " frames";
-
-                    if (frames.size())
-                    {
-                        QFile f("D:\\out.yuv");
-                        f.open(QIODevice::WriteOnly | QIODevice::Append);
-
-                        vector<uint8_t> bytes = frames[0].dumpToBytes();
-                        f.write((const char*)bytes.data(), bytes.size());
-                    }
+                    count++;
+                    //qDebug() << fr.timestampSeconds();
                 }
             }
         }
 
-        qDebug() << "Done";
+        FrameList remainingFrames = decoder->drain();
+
+        for (auto& fr : remainingFrames)
+        {
+            count++;
+            //qDebug() << fr.timestampSeconds();
+        }
+
     }
     catch (const std::exception &e)
     {
         qDebug() << "exception: " << e.what();
     }
+
+    double elapsed = (QDateTime::currentMSecsSinceEpoch() - startMs) / 1000.;
+    qInfo() << "Finished " << count << " frames in " << elapsed << " FPS: " << count / elapsed;
+}
+
+int main(int argc, char *argv[])
+{
+    videoDecodeBenchmark();
 
     return 0;
 }

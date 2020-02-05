@@ -8,7 +8,9 @@ namespace JACFFmpegLib
     class Frame
     {
     private:
-        AVFramePtr frame;
+        AVFramePtr _frame;
+        AVMediaType _mediaType = AVMediaType::AVMEDIA_TYPE_UNKNOWN;
+        AVRational _timebase = {0, 0};
 
     public:
         DISALLOW_COPY(Frame);
@@ -20,10 +22,29 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT Frame(Frame &&) = default;
         JACFFMPEGLIB_EXPORT Frame& operator=(Frame &&) = default;
 
+        // Custom properties
+        JACFFMPEGLIB_EXPORT void setMediaType(AVMediaType mediaType);
+        JACFFMPEGLIB_EXPORT AVMediaType mediaType();
+        JACFFMPEGLIB_EXPORT void setTimebase(AVRational timebase);
+        JACFFMPEGLIB_EXPORT AVRational timebase();
+
+        // General AVFrame getters/setters
+        JACFFMPEGLIB_EXPORT int64_t timestamp();
+        JACFFMPEGLIB_EXPORT double timestampSeconds();
+
+        // Video AVFrame getters/setters
+        JACFFMPEGLIB_EXPORT size_t width();
+        JACFFMPEGLIB_EXPORT size_t height();
+        JACFFMPEGLIB_EXPORT AVPixelFormat pixelFormat();
+
+        // Audio AVFame getters/setters
+        JACFFMPEGLIB_EXPORT AVSampleFormat sampleFormat();
+
+        // Methods
         JACFFMPEGLIB_EXPORT vector<uint8_t> dumpToBytes();
 
         // Internal methods
-        AVFramePtr &getAVFrame();
+        AVFramePtr &avframe();
     };
 
     using FrameList = std::vector<Frame>;

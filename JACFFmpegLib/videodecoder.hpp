@@ -12,13 +12,15 @@ namespace JACFFmpegLib
     {
     private:
         AVCodecContext *codecCtx = nullptr;
-        //AVCodecParameters *codecParams = nullptr;
+        AVRational lastPacketTimebase = {0, 0};
 
     public:
         JACFFMPEGLIB_EXPORT VideoDecoder(const Stream& stream);
         JACFFMPEGLIB_EXPORT ~VideoDecoder();
 
         JACFFMPEGLIB_EXPORT FrameList decodePacket(Packet& p);
+        JACFFMPEGLIB_EXPORT FrameList drain();
+        JACFFMPEGLIB_EXPORT void flushBuffers();
 
         DISALLOW_COPY_AND_MOVE(VideoDecoder)
     };

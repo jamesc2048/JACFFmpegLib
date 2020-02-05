@@ -9,34 +9,41 @@ namespace JACFFmpegLib
     class Packet
     {
     private:
-        AVPacketPtr packet;
-        AVMediaType codecType = AVMediaType::AVMEDIA_TYPE_UNKNOWN;
-        AVCodecID codecId = AVCodecID::AV_CODEC_ID_NONE;
-        weak_ptr<Stream> streamRef;
+        AVPacketPtr _packet;
+        AVMediaType _mediaType = AVMediaType::AVMEDIA_TYPE_UNKNOWN;
+        AVCodecID _codecId = AVCodecID::AV_CODEC_ID_NONE;
+        AVRational _timebase = {0, 0};
+        weak_ptr<Stream> _streamRef;
 
     public:
         DISALLOW_COPY(Packet);
 
         JACFFMPEGLIB_EXPORT Packet();
-        JACFFMPEGLIB_EXPORT Packet(AVPacket *packet);
-        JACFFMPEGLIB_EXPORT Packet(AVPacketPtr packet);
+        JACFFMPEGLIB_EXPORT Packet(AVPacket *_packet);
+        JACFFMPEGLIB_EXPORT Packet(AVPacketPtr _packet);
         JACFFMPEGLIB_EXPORT ~Packet();
         JACFFMPEGLIB_EXPORT Packet(Packet &&) = default;
         JACFFMPEGLIB_EXPORT Packet& operator=(Packet &&) = default;
 
-        JACFFMPEGLIB_EXPORT bool hasData();
-        JACFFMPEGLIB_EXPORT size_t getStreamIndex();
-        JACFFMPEGLIB_EXPORT AVMediaType getCodecType();
-        JACFFMPEGLIB_EXPORT void setCodecType(AVMediaType codecType);
-        JACFFMPEGLIB_EXPORT AVCodecID getCodecId();
-        JACFFMPEGLIB_EXPORT void setCodecId(AVCodecID codecId);
-        JACFFMPEGLIB_EXPORT weak_ptr<Stream> getStreamRef();
+        // Custom properties
+        JACFFMPEGLIB_EXPORT AVMediaType mediaType();
+        JACFFMPEGLIB_EXPORT void setMediaType(AVMediaType _mediaType);
+        JACFFMPEGLIB_EXPORT AVCodecID codecId();
+        JACFFMPEGLIB_EXPORT void setCodecId(AVCodecID _codecId);
+        JACFFMPEGLIB_EXPORT weak_ptr<Stream> streamRef();
+        JACFFMPEGLIB_EXPORT AVRational streamTimebase();
 
+        // AVPacket getters/setters
+        JACFFMPEGLIB_EXPORT bool hasData();
+        JACFFMPEGLIB_EXPORT int streamIndex();
+
+        // Methods
         JACFFMPEGLIB_EXPORT Packet clone();
 
         // Internal methods
-        AVPacketPtr& getAVPacket();
+        AVPacketPtr& avpacket();
         void setStreamRef(weak_ptr<Stream> stream);
+        void setStreamTimebase(AVRational timebase);
     };
 }
 

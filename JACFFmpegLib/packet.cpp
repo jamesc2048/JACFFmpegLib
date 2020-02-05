@@ -8,7 +8,7 @@ namespace JACFFmpegLib
     }
 
     Packet::Packet(AVPacketPtr packet)
-                    : packet(move(packet))
+                    : _packet(move(packet))
     {
         if (!packet)
         {
@@ -23,76 +23,87 @@ namespace JACFFmpegLib
 
     Packet::Packet()
     {
-        packet = make_avpacket(av_packet_alloc());
+        _packet = make_avpacket(av_packet_alloc());
 
-        packet->size = 0;
-        packet->data = nullptr;
-        packet->buf = nullptr;
+        _packet->size = 0;
+        _packet->data = nullptr;
+        _packet->buf = nullptr;
     }
 
-    AVPacketPtr& Packet::getAVPacket()
+    AVPacketPtr& Packet::avpacket()
     {
         // Needed for internal operations. Hidden to external API.
-        return packet;
+        return _packet;
     }
 
     void Packet::setStreamRef(weak_ptr<Stream> stream)
     {
-        streamRef = stream;
+        _streamRef = stream;
+    }
+
+    void Packet::setStreamTimebase(AVRational timebase)
+    {
+        _timebase = timebase;
     }
 
     bool Packet::hasData()
     {
-        assert(packet);
+        assert(_packet);
 
         // Note that packet will always be non-null (unless somebody sets it to null...)
-        return packet->size > 0 && packet->data;
+        return _packet->size > 0 && _packet->data;
     }
 
-    void Packet::setCodecType(AVMediaType codecType)
+    void Packet::setMediaType(AVMediaType codecType)
     {
-        this->codecType = codecType;
+        this->_mediaType = codecType;
     }
 
-    AVCodecID Packet::getCodecId()
+    AVCodecID Packet::codecId()
     {
-        return codecId;
+        return _codecId;
     }
 
     void Packet::setCodecId(AVCodecID codecId)
     {
-        this->codecId = codecId;
+        this->_codecId = codecId;
     }
 
-    std::weak_ptr<Stream> Packet::getStreamRef()
+    std::weak_ptr<Stream> Packet::streamRef()
     {
         // Reference to the stream in the Demuxer object that
         // If you deallocate the Demuxer object, the Stream objects will go out of scope and as such
         // you may not use the stream reference any more.
-        return streamRef;
+        return _streamRef;
     }
 
-    AVMediaType Packet::getCodecType()
+    AVRational Packet::streamTimebase()
     {
-        return codecType;
+        return _timebase;
     }
 
-    size_t Packet::getStreamIndex()
+    AVMediaType Packet::mediaType()
     {
-        return packet->stream_index;
+        return _mediaType;
+    }
+
+    int Packet::streamIndex()
+    {
+        // TODO can this be -1?
+        return _packet->stream_index;
     }
 
     Packet Packet::clone()
     {
-        if (packet->side_data_elems > 0)
+        if (_packet->side_data_elems > 0)
         {
             THROW_EXCEPTION("Side data copying not implemented!");
         }
 
         Packet clonePacket;
 
-        AVPacket* cloneAVPacket = clonePacket.getAVPacket().get();
-        const AVPacket* oldAVPacket = packet.get();
+        AVPacket* cloneAVPacket = clonePacket.avpacket().get();
+        const AVPacket* oldAVPacket = _packet.get();
 
         cloneAVPacket->size = cloneAVPacket->size;
         // https://stackoverflow.com/questions/12929330/create-a-copy-of-an-avpacket-structure
@@ -102,8 +113,8 @@ namespace JACFFmpegLib
 
         av_packet_copy_props(cloneAVPacket, oldAVPacket);
 
-        clonePacket.setCodecType(getCodecType());
-        clonePacket.setStreamRef(getStreamRef());
+        clonePacket.setMediaType(mediaType());
+        clonePacket.setStreamRef(streamRef());
 
         // TODO
 //        // TODO avoid deprecated func

@@ -53,3 +53,9 @@ compile_commands.json
 debug
 /FFmpeg_libs
 /JACFFmpegLib/obj
+/JACFFmpegLib/release/JACFFmpegLib.exp
+/JACFFmpegLib/release/JACFFmpegLib.lib
+/JACFFmpegLib/release/JACFFmpegLib_pch.obj
+/JACFFmpegLib/release/JACFFmpegLib_pch.pch
+/TestProject/release/TestProject.exe
+/TestProject/release/main.obj

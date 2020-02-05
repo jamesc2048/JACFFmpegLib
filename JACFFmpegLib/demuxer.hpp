@@ -12,21 +12,21 @@ namespace JACFFmpegLib
     private:
         AVFormatContext* formatCtx = nullptr;
 
-        string url;
-        vector<shared_ptr<Stream>> streams;
-        bool eosFlag = false;
-        int bestVideoStreamIndex = AVERROR_STREAM_NOT_FOUND;
-        int bestAudioStreamIndex = AVERROR_STREAM_NOT_FOUND;
+        string _url;
+        vector<shared_ptr<Stream>> _streams;
+        bool _eosFlag = false;
+        int _bestVideoStreamIndex = AVERROR_STREAM_NOT_FOUND;
+        int _bestAudioStreamIndex = AVERROR_STREAM_NOT_FOUND;
 
     public:
-        JACFFMPEGLIB_EXPORT Demuxer(string url);
+        JACFFMPEGLIB_EXPORT Demuxer(string _url);
         JACFFMPEGLIB_EXPORT ~Demuxer();
 
-        JACFFMPEGLIB_EXPORT const vector<shared_ptr<Stream>>& getStreams();
+        JACFFMPEGLIB_EXPORT const vector<shared_ptr<Stream>>& streams();
         JACFFMPEGLIB_EXPORT bool hasVideo();
         JACFFMPEGLIB_EXPORT bool hasAudio();
-        JACFFMPEGLIB_EXPORT weak_ptr<Stream> getBestVideoStream();
-        JACFFMPEGLIB_EXPORT weak_ptr<Stream> getBestAudioStream();
+        JACFFMPEGLIB_EXPORT weak_ptr<Stream> bestVideoStream();
+        JACFFMPEGLIB_EXPORT weak_ptr<Stream> bestAudioStream();
         JACFFMPEGLIB_EXPORT bool isEOS();
         JACFFMPEGLIB_EXPORT Packet nextPacket();
         JACFFMPEGLIB_EXPORT bool seekToKeyframe(double seconds);
