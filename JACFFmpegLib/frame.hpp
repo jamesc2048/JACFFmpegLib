@@ -36,15 +36,15 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT size_t width();
         JACFFMPEGLIB_EXPORT size_t height();
         JACFFMPEGLIB_EXPORT AVPixelFormat pixelFormat();
+        JACFFMPEGLIB_EXPORT AVRational sampleAspectRatio();
 
         // Audio AVFame getters/setters
         JACFFMPEGLIB_EXPORT AVSampleFormat sampleFormat();
 
         // Methods
         JACFFMPEGLIB_EXPORT vector<uint8_t> dumpToBytes();
-
-        // Internal methods
-        AVFramePtr &avframe();
+        // Beware using AVFrame directly as it could break things. Giving access for flexibility's sake.
+        JACFFMPEGLIB_EXPORT AVFramePtr& avframe();
     };
 
     using FrameList = std::vector<Frame>;

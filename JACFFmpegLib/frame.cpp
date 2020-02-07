@@ -28,52 +28,33 @@ namespace JACFFmpegLib
 
         if (mediaType() != AVMediaType::AVMEDIA_TYPE_VIDEO)
         {
-            THROW_EXCEPTION("Not implemented");
+            THROW_EXCEPTION("Only implemented for video data");
         }
 
         vector<uint8_t> vec;
 
-        switch (fr->format)
+        // No special alignment: align to byte
+        const int alignment = 8;
+
+        // Read this with "ffplay -video_size widthxheight -pixel_format format"
+        int bufSize = av_image_get_buffer_size((AVPixelFormat)fr->format,
+                                               fr->width,
+                                               fr->height,
+                                               alignment);
+        vec.resize((size_t)bufSize);
+
+        int ret = av_image_copy_to_buffer(vec.data(),
+                                          bufSize,
+                                          fr->data,
+                                          fr->linesize,
+                                          (AVPixelFormat)fr->format,
+                                          fr->width,
+                                          fr->height,
+                                          alignment);
+
+        if (ret == AVERROR(EINVAL))
         {
-            case AVPixelFormat::AV_PIX_FMT_YUV420P:
-            {
-                assert(fr->width > 0 && fr->height > 0);
-
-                // Read this with "ffplay -video_size widthxheight -pixel_format yuv420p"
-                // 8bpp Y + 2bpp U + 2bpp V
-                size_t wh = fr->width * fr->height;
-                vec.resize(wh + wh / 2);
-                uint8_t* vecData = vec.data();
-
-                for (int y = 0; y < fr->height; y++)
-                {
-                    uint8_t* lineStart = fr->data[0] + fr->linesize[0] * y;
-
-                    memcpy(vecData, lineStart, fr->width);
-                    vecData += fr->width;
-                }
-
-                for (int y = 0; y < fr->height / 2; y++)
-                {
-                    uint8_t* lineStart = fr->data[1] + fr->linesize[1] * y;
-
-                    memcpy(vecData, lineStart, fr->width / 2);
-                    vecData += fr->width / 2;
-                }
-
-                for (int y = 0; y < fr->height / 2; y++)
-                {
-                    uint8_t* lineStart = fr->data[2] + fr->linesize[2] * y;
-
-                    memcpy(vecData, lineStart, fr->width / 2);
-                    vecData += fr->width / 2;
-                }
-
-                break;
-            }
-
-            default:
-                THROW_EXCEPTION("Not implemented");
+            THROW_EXCEPTION("Frame format not supported");
         }
 
         return vec;
@@ -139,6 +120,13 @@ namespace JACFFmpegLib
         return (AVPixelFormat)_frame->format;
     }
 
+    AVRational Frame::sampleAspectRatio()
+    {
+        CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_VIDEO);
+
+        return _frame->sample_aspect_ratio;
+    }
+
     AVSampleFormat Frame::sampleFormat()
     {
         CHECK_MEDIA_TYPE(AVMediaType::AVMEDIA_TYPE_AUDIO);
@@ -146,9 +134,8 @@ namespace JACFFmpegLib
         return (AVSampleFormat)_frame->format;
     }
 
-    AVFramePtr & Frame::avframe()
+    AVFramePtr& Frame::avframe()
     {
-        // Needed for internal operations. Hidden to external API.
         return _frame;
     }
 }

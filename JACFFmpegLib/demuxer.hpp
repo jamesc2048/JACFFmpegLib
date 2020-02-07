@@ -22,12 +22,15 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT Demuxer(string _url);
         JACFFMPEGLIB_EXPORT ~Demuxer();
 
+        // Getters
         JACFFMPEGLIB_EXPORT const vector<shared_ptr<Stream>>& streams();
         JACFFMPEGLIB_EXPORT bool hasVideo();
         JACFFMPEGLIB_EXPORT bool hasAudio();
         JACFFMPEGLIB_EXPORT weak_ptr<Stream> bestVideoStream();
         JACFFMPEGLIB_EXPORT weak_ptr<Stream> bestAudioStream();
         JACFFMPEGLIB_EXPORT bool isEOS();
+
+        // Methods
         JACFFMPEGLIB_EXPORT Packet nextPacket();
         JACFFMPEGLIB_EXPORT bool seekToKeyframe(double seconds);
 

@@ -30,6 +30,7 @@ SOURCES += \
     demuxer.cpp \
     frame.cpp \
     packet.cpp \
+    simplefilter.cpp \
     stream.cpp \
     utilities.cpp \
     videodecoder.cpp
@@ -41,6 +42,7 @@ HEADERS += \
     frame.hpp \
     packet.hpp \
     pch.hpp \
+    simplefilter.hpp \
     stream.hpp \
     utilities.hpp \
     videodecoder.hpp

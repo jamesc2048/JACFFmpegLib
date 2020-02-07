@@ -32,7 +32,6 @@ namespace JACFFmpegLib
 
     AVPacketPtr& Packet::avpacket()
     {
-        // Needed for internal operations. Hidden to external API.
         return _packet;
     }
 
@@ -103,7 +102,7 @@ namespace JACFFmpegLib
         Packet clonePacket;
 
         AVPacket* cloneAVPacket = clonePacket.avpacket().get();
-        const AVPacket* oldAVPacket = _packet.get();
+        const AVPacket* oldAVPacket = avpacket().get();
 
         cloneAVPacket->size = cloneAVPacket->size;
         // https://stackoverflow.com/questions/12929330/create-a-copy-of-an-avpacket-structure
@@ -115,10 +114,6 @@ namespace JACFFmpegLib
 
         clonePacket.setMediaType(mediaType());
         clonePacket.setStreamRef(streamRef());
-
-        // TODO
-//        // TODO avoid deprecated func
-//        av_copy_packet(clonePacket.getAVPacket().get(), packet.get());
 
         return clonePacket;
     }

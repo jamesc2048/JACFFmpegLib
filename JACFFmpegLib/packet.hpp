@@ -39,9 +39,10 @@ namespace JACFFmpegLib
 
         // Methods
         JACFFMPEGLIB_EXPORT Packet clone();
+        // Beware using AVPacket directly as it could break things. Giving access for flexibility's sake.
+        JACFFMPEGLIB_EXPORT AVPacketPtr& avpacket();
 
         // Internal methods
-        AVPacketPtr& avpacket();
         void setStreamRef(weak_ptr<Stream> stream);
         void setStreamTimebase(AVRational timebase);
     };
