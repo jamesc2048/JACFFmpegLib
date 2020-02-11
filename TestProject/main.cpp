@@ -82,7 +82,7 @@ void videoDecodeBenchmark()
         unique_ptr<Demuxer> demuxer = make_unique<Demuxer>("D:\\1hourPAL.mp4");
 
         unique_ptr<VideoDecoder> decoder;
-        unique_ptr<SimpleFilter> filter;
+        unique_ptr<SimpleVideoFilter> filter;
 
         while (!demuxer->isEOS())
         {
@@ -108,7 +108,7 @@ void videoDecodeBenchmark()
                 {
                     if (!filter)
                     {
-                        filter = make_unique<SimpleFilter>("format=bgr24,fps=25*5", fr);
+                        filter = make_unique<SimpleVideoFilter>("[in0][in1]hstack=inputs=2[out0]; [in2]null[out1]", fr);
                     }
 
                     FrameList filterFrames = filter->filterFrame(fr);

@@ -6,7 +6,7 @@
 
 namespace JACFFmpegLib
 {
-    class SimpleFilter
+    class SimpleVideoFilter
     {
     private:
         AVFilterGraph *filterGraph = nullptr;
@@ -14,7 +14,7 @@ namespace JACFFmpegLib
         AVFilterContext *bufferSink = nullptr;
 
     public:
-        JACFFMPEGLIB_EXPORT SimpleFilter(string filterGraphString,
+        JACFFMPEGLIB_EXPORT SimpleVideoFilter(string filterGraphString,
                      int inputWidth,
                      int inputHeight,
                      AVPixelFormat inputFormat,
@@ -22,8 +22,8 @@ namespace JACFFmpegLib
                      AVRational inputStaticAspectRatio = {0, 1},
                      optional<AVRational> inputFramerate = std::nullopt);
 
-        JACFFMPEGLIB_EXPORT SimpleFilter(string filterGraphString, Frame& configureFrame);
-        JACFFMPEGLIB_EXPORT ~SimpleFilter();
+        JACFFMPEGLIB_EXPORT SimpleVideoFilter(string filterGraphString, Frame& configureFrame);
+        JACFFMPEGLIB_EXPORT ~SimpleVideoFilter();
 
         JACFFMPEGLIB_EXPORT FrameList filterFrame(Frame& frame);
     };

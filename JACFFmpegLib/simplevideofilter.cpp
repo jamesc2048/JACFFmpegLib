@@ -1,8 +1,8 @@
-#include "simplefilter.hpp"
+#include "simplevideofilter.hpp"
 
 namespace JACFFmpegLib
 {
-    SimpleFilter::SimpleFilter(string filterGraphString,
+    SimpleVideoFilter::SimpleVideoFilter(string filterGraphString,
                                int inputWidth,
                                int inputHeight,
                                AVPixelFormat inputFormat,
@@ -34,12 +34,18 @@ namespace JACFFmpegLib
             THROW_EXCEPTION("Could not allocate filter graph");
         }
 
-        int ret = avfilter_graph_parse2(filterGraph, fullFilterString.str().c_str(), &input, &output);
+        int ret = avfilter_graph_parse2(filterGraph, filterGraphString.c_str(), &input, &output);
 
         if (ret < 0)
         {
             THROW_EXCEPTION("Failed to parse and generate filters for filterString: %d, %s");
         }
+
+        // TODO filter in/out can be used to configure complex filter
+        // EG [in0][in1]hstack=inputs=2[out0]; [in2]null[out1]
+        // produces input of in0, in1 with filtergraph hstack, and in2 with filtergraph null
+        // output out0 and out1
+        // Should be as simple as attaching buffersrc to each input, and buffersink to each output
 
         avfilter_inout_free(&input);
         avfilter_inout_free(&output);
@@ -64,10 +70,12 @@ namespace JACFFmpegLib
         {
             THROW_EXCEPTION("Failed to configure filter graph: %d, %s");
         }
+
+        avfilter_graph_dump(filterGraph, nullptr);
     }
 
-    SimpleFilter::SimpleFilter(string filterGraphString, Frame& fr)
-                : SimpleFilter(filterGraphString,
+    SimpleVideoFilter::SimpleVideoFilter(string filterGraphString, Frame& fr)
+                : SimpleVideoFilter(filterGraphString,
                                (int)fr.width(),
                                (int)fr.height(),
                                fr.pixelFormat(),
@@ -76,7 +84,7 @@ namespace JACFFmpegLib
     {
     }
 
-    SimpleFilter::~SimpleFilter()
+    SimpleVideoFilter::~SimpleVideoFilter()
     {
         if (filterGraph)
         {
@@ -85,7 +93,7 @@ namespace JACFFmpegLib
     }
 
 
-    FrameList SimpleFilter::filterFrame(Frame& frame)
+    FrameList SimpleVideoFilter::filterFrame(Frame& frame)
     {
         int ret = av_buffersrc_add_frame_flags(bufferSource, frame.avframe().get(), AV_BUFFERSRC_FLAG_PUSH);
 

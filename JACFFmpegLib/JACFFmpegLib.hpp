@@ -13,6 +13,6 @@
 #include "videodecoder.hpp"
 
 // libavfilter related
-#include "simplefilter.hpp"
+#include "simplevideofilter.hpp"
 
 #endif // JACFFMPEGLIB_HPP
