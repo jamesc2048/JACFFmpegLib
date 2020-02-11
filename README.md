@@ -7,12 +7,12 @@ Sensible defaults should be applied whenever needed for essential operation, suc
 
 ## Roadmap (roughly in order of interest)
 - [X] Demuxer (opens FFmpeg compatible URI and outputs `Packet`s)
-- [ ] VideoDecoder (decodes video `Packet`s into `Frame`s) 
+- [X] VideoDecoder (decodes video `Packet`s into `Frame`s) 
 - [ ] VideoFormatConverter (converts Video `Frame`s resolution and/or formats)
+- [X] 1 to 1 VideoFilter (AVFilter graph with single input and single output)
 - [ ] Muxer (output to FFmpeg supported URI, accepts `Packet`s)
 - [ ] VideoEncoder
 - [ ] AudioEncoder
-- [ ] 1 to 1 Filter (AVFilter with single input and single output)
 - [ ] Many to many Filter (AVFilter full support)
 - [ ] AudioDecoder 
 - [ ] AudioFormatConverter (converts Video `Frame`s resolution and/or formats)
