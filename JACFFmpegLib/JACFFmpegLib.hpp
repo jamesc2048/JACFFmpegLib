@@ -8,6 +8,7 @@
 // libvformat related
 #include "stream.hpp"
 #include "demuxer.hpp"
+#include "muxer.hpp"
 
 // libavcodec related
 #include "videodecoder.hpp"

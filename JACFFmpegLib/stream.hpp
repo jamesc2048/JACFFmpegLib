@@ -45,7 +45,7 @@ namespace JACFFmpegLib
         JACFFMPEGLIB_EXPORT int channels() const;
 
         // Internal
-        AVCodecParameters* codecParams() const;
+        const AVCodecParameters* codecParams() const;
     };
 
 //    class VideoStream : Stream

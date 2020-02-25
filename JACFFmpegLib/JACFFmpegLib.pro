@@ -29,6 +29,8 @@ win32-msvc* {
 SOURCES += \
     demuxer.cpp \
     frame.cpp \
+    inputreader.cpp \
+    muxer.cpp \
     packet.cpp \
     simplevideofilter.cpp \
     stream.cpp \
@@ -40,6 +42,8 @@ HEADERS += \
     common.hpp \
     demuxer.hpp \
     frame.hpp \
+    inputreader.hpp \
+    muxer.hpp \
     packet.hpp \
     pch.hpp \
     simplevideofilter.hpp \

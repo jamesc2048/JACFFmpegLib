@@ -145,9 +145,36 @@ void videoDecodeBenchmark()
     qInfo() << "Finished " << count << " frames in " << elapsed << " FPS: " << count / elapsed;
 }
 
+void remuxingTest()
+{
+    int count = 0;
+    int64_t startMs = QDateTime::currentMSecsSinceEpoch();
+
+    unique_ptr<Demuxer> demuxer = make_unique<Demuxer>("D:\\1hourPAL.mp4");
+    unique_ptr<Muxer> muxer = make_unique<Muxer>("D:\\1hourPAL-remux.mp4");
+
+    muxer->copyStreams(demuxer->streams());
+
+    while (!demuxer->isEOS())
+    {
+        Packet p = demuxer->nextPacket();
+
+        if (p.hasData())
+        {
+            muxer->writePacket(p);
+            count++;
+        }
+    }
+
+    muxer->close();
+
+    double elapsed = (QDateTime::currentMSecsSinceEpoch() - startMs) / 1000.;
+    qInfo() << "Finished " << count << " frames in " << elapsed << " FPS: " << count / elapsed;
+}
+
 int main(int argc, char *argv[])
 {
-    videoDecodeBenchmark();
+    remuxingTest();
 
     return 0;
 }

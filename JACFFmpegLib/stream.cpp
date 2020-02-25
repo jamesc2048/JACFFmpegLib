@@ -139,7 +139,7 @@ namespace JACFFmpegLib
         return _stream->codecpar->channels;
     }
 
-    AVCodecParameters* Stream::codecParams() const
+    const AVCodecParameters* Stream::codecParams() const
     {
         return _stream->codecpar;
     }
