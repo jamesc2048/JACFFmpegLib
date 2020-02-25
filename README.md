@@ -10,7 +10,7 @@ Sensible defaults should be applied whenever needed for essential operation, suc
 - [X] VideoDecoder (decodes video `Packet`s into `Frame`s) 
 - [ ] VideoFormatConverter (converts Video `Frame`s resolution and/or formats)
 - [X] 1 to 1 VideoFilter (AVFilter graph with single input and single output)
-- [ ] Muxer (output to FFmpeg supported URI, accepts `Packet`s)
+- [X] Muxer (output to FFmpeg supported URI, accepts `Packet`s)
 - [ ] VideoEncoder
 - [ ] AudioEncoder
 - [ ] Many to many Filter (AVFilter full support)
