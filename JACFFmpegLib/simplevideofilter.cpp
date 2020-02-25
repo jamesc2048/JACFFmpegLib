@@ -10,7 +10,8 @@ namespace JACFFmpegLib
                                AVRational inputStaticAspectRatio,
                                optional<AVRational> inputFramerate)
     {
-        stringstream fullFilterString = stringstream() << "buffer=video_size=" << inputWidth << "x" << inputHeight <<
+        stringstream fullFilterString;
+        fullFilterString << "buffer=video_size=" << inputWidth << "x" << inputHeight <<
                                                     ":pix_fmt=" << inputFormat <<
                                                     ":time_base=" << inputTimebase.num << "/" << inputTimebase.den <<
                                                     ":pixel_aspect=" << inputStaticAspectRatio.num << "/" << inputStaticAspectRatio.den;
