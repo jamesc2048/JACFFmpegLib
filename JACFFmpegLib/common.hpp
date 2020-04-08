@@ -9,11 +9,11 @@
 #  define Q_DECL_IMPORT     __attribute__((visibility("default")))
 #endif
 
-#if defined(JACFFMPEGLIB_LIBRARY)
+//#if defined(JACFFMPEGLIB_LIBRARY)
 #  define JACFFMPEGLIB_EXPORT Q_DECL_EXPORT
-#else
-#  define JACFFMPEGLIB_EXPORT Q_DECL_IMPORT
-#endif
+//#else
+//#  define JACFFMPEGLIB_EXPORT Q_DECL_IMPORT
+//#endif
 
 #include "pch.hpp"
 #include "utilities.hpp"
