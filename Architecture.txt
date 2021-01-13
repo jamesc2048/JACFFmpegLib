@@ -1,0 +1,28 @@
+InputURL -> Frame in memory
+Frame in memory -> OutputURL
+
+InputURL class fields
+- string url
+
+Frame class fields
+int64 timestamp (rational?)
+double timestampSeconds 
+
+Subclass VideoFrame
+Subclass AudioFrame
+Subclass SubtitleFrame
+
+How to make this accessible in C API?
+
+InputURL class fields
+
+VideoFilter class fields
+- string filterstring
+
+AudioFilter class fields
+- string filterstring
+
+std::unique_ptr<Frame>
+
+How to make "Frame" class idiomatic to use with C++, but also C compatible?
+AVFrame unused fields: want to hide these depending on AVFrame type (video, audio, subtitle)

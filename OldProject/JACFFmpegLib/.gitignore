@@ -52,14 +52,3 @@ compile_commands.json
 *creator.user*
 debug
 /FFmpeg_libs
-/JACFFmpegLib/obj
-/JACFFmpegLib/release/JACFFmpegLib.exp
-/JACFFmpegLib/release/JACFFmpegLib.lib
-/JACFFmpegLib/release/JACFFmpegLib_pch.obj
-/JACFFmpegLib/release/JACFFmpegLib_pch.pch
-/TestProject/release/TestProject.exe
-/TestProject/release/main.obj
-/TestProject/TestProject.exe
-
-out/
-.vs/
