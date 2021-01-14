@@ -16,14 +16,26 @@ FFmpegError InputURL::open()
 {
 	std::cout << "opening " << url << std::endl;
 
-	int ret = avformat_open_input(&formatCtx, url.c_str(), nullptr, nullptr);
+	int ret;
 
-	std::cout << ret << std::endl;
-
-	if (ret < 0)
+	if (ret = avformat_open_input(&formatCtx, url.c_str(), nullptr, nullptr))
 	{
 		return FFmpegError::DemuxerError;
 	}
+
+	if (ret = avformat_find_stream_info(formatCtx, nullptr))
+	{
+		close();
+		return FFmpegError::DemuxerError;
+	}
+
+	if (formatCtx->nb_streams == 0)
+	{
+		close();
+		return FFmpegError::NoStreams;
+	}
+
+	av_dump_format(formatCtx, 0, url.c_str(), 0);
 
 	isOpen = true;
 	return FFmpegError::NoError;

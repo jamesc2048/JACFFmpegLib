@@ -18,7 +18,8 @@ enum class FFmpegError
 {
 	NoError,
 	DemuxerError,
-	CodecError
+	NoStreams,
+	CodecError,
 };
 
 class EXPORT InputURL
