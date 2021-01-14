@@ -1,9 +1,11 @@
-﻿# CMakeList.txt : CMake project for TestProject, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.18)
+﻿cmake_minimum_required (VERSION 3.18)
 
-# Add source to this project's executable.
+project (TestProject)
+
+set(CMAKE_CXX_STANDARD 17)
+
 add_executable (TestProject "testProject.cpp" "testProject.hpp")
+target_include_directories(TestProject PUBLIC JACFFmpegLib)
+target_link_libraries(TestProject JACFFmpegLib)
 
-# TODO: Add tests and install targets if needed.
+install(TARGETS TestProject RUNTIME DESTINATION bin)

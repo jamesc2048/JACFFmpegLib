@@ -3,10 +3,13 @@
 
 #include "testProject.hpp"
 
-using namespace std;
+#include "..\JACFFmpegLib\inputURL.hpp"
 
 int main()
 {
-	cout << "Hello CMake." << endl;
-	return 0;
+	InputURL url("D:\\wow.mp4");
+
+	FFmpegError err = url.open();
+
+	std::cout << "wow" << std::endl;
 }
