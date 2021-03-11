@@ -1,51 +1,19 @@
-﻿cmake_minimum_required (VERSION 3.18)
+﻿# CMakeList.txt : CMake project for JACFFmpegLib, include source and define
+# project specific logic here.
+#
+cmake_minimum_required (VERSION 3.16)
 
-project(JACFFmpegLib)
+set(BUILD_SHARED_LIBS no)
 
-set(CMAKE_CXX_STANDARD 17)
+add_library(JACFFmpegLib "JACFFmpegLib.hpp" "frame.hpp" "frame.cpp" "inputUrl.hpp" "inputUrl.cpp")
+set_property(TARGET JACFFmpegLib PROPERTY CXX_STANDARD 17)
 
-# Does not work for Static at the moment.
-option(BUILD_SHARED_LIBS "Build Shared instead of Static" ON)
+target_precompile_headers(JACFFmpegLib PUBLIC pch.hpp)
 
-# libav libraries common path, check for one
-find_path(LIBAV_INCLUDE_DIR libavformat/avformat.h)
-
-find_library(LIBAV_AVFORMAT_LIB avformat)
-find_library(LIBAV_AVCODEC_LIB avcodec)
-find_library(LIBAV_AVUTIL_LIB avutil)
-
-set(LIBAV_LIBS ${LIBAV_AVFORMAT_LIB} ${LIBAV_AVCODEC_LIB} ${LIBAV_AVUTIL_LIB})
-
-message("Build Shared: ${BUILD_SHARED_LIBS}")
-message("LibAV Include dir: ${LIBAV_INCLUDE_DIR}")
-message("LibAV libs: ${LIBAV_LIBS}")
-
-if(USING_VCPKG AND BUILD_SHARED_LIBS)
-	# TODO how not to hardcode these? also these always point to the debug?
-	find_file(LIBAV_AVFORMAT_DLL "bin/avformat-58.dll")
-	find_file(LIBAV_AVCODEC_DLL "bin/avcodec-58.dll")
-	find_file(LIBAV_AVUTIL_DLL "bin/avutil-56.dll")
-	# why does VCPKG libavcodec link to swresample?
-	find_file(LIBAV_SWRESAMPLE_DLL "bin/swresample-3.dll")
-	find_file(X264_DLL "bin/libx264-157.dll")
-	
-	set(LIBAV_DLLS ${LIBAV_AVFORMAT_DLL} ${LIBAV_AVCODEC_DLL} ${LIBAV_AVUTIL_DLL} ${LIBAV_SWRESAMPLE_DLL} ${X264_DLL})
-	message("LibAV dlls: ${LIBAV_DLLS}")
+if(MSVC)
+  target_compile_options(JACFFmpegLib PRIVATE /W4 /WX)
+else()
+  target_compile_options(JACFFmpegLib PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()
 
-file(GLOB SOURCES *.cpp)
-file(GLOB HEADERS *.hpp)
-
-message("Sources: ${SOURCES} ${HEADERS}")
-
-add_library(JACFFmpegLib ${SOURCES} ${HEADERS})
-
-target_include_directories(JACFFmpegLib PUBLIC ${LIBAV_INCLUDE_DIR})
-target_link_libraries(JACFFmpegLib ${LIBAV_LIBS})
-target_compile_definitions(JACFFmpegLib PRIVATE JACFFMPEGLIB_BUILD)
-
-install(FILES ${LIBAV_DLLS} DESTINATION bin)
-install(TARGETS JACFFmpegLib RUNTIME DESTINATION bin)
-install(TARGETS JACFFmpegLib LIBRARY DESTINATION lib)
-# TODO public headers?
-install(FILES inputURL.hpp DESTINATION include)
+# TODO: Add tests and install targets if needed.

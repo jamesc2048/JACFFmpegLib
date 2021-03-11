@@ -1,45 +1,34 @@
-﻿#pragma once
+#pragma once
 
-#include <string>
+#include "pch.hpp"
 
-// TODO is this correct?
-#ifdef JACFFMPEGLIB_BUILD
-	#define EXPORT __declspec(dllexport)
+#include "frame.hpp"
 
-extern "C" {
-	#include <libavformat/avformat.h>
-	#include <libavcodec/avcodec.h>
-}
-#else
-	#define EXPORT //__declspec(dllimport)
-#endif
-
-enum class FFmpegError
-{
-	NoError,
-	DemuxerError,
-	NoStreams,
-	CodecError,
-};
-
-class EXPORT InputURL
+class InputUrl
 {
 private:
-#ifdef JACFFMPEGLIB_BUILD
-	std::string url;
-	bool isOpen = false;
-	
-	AVFormatContext* formatCtx = nullptr;
-	AVCodecContext* codecCtx = nullptr;
-#endif
+	std::string mUrl;
+	// av format ctx
 
 public:
-	InputURL(std::string url);
-	~InputURL();
+	InputUrl(std::string_view url) : mUrl(url)
+	{
+		// open format context
+		// throw if can't open
+	}
 
-	FFmpegError open();
-	void close();
+	~InputUrl()
+	{
+		// close input format ctx
+	}
 
-	std::string getUrl();
-	bool getIsOpen();
+	const std::string& url()
+	{
+		return mUrl;
+	}
+
+	FramePtr nextFrame()
+	{
+		return {};
+	}
 };
