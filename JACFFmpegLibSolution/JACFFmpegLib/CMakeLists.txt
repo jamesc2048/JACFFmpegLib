@@ -32,7 +32,7 @@ target_precompile_headers(JACFFmpegLib PUBLIC pch.hpp)
 
 # Warnings as errors
 if(MSVC)
-  target_compile_options(JACFFmpegLib PRIVATE /W4 /WX)
+  target_compile_options(JACFFmpegLib PRIVATE /W4 /WX /permissive-)
 else()
   target_compile_options(JACFFmpegLib PRIVATE -Wall -Wextra -pedantic -Werror)
 endif()

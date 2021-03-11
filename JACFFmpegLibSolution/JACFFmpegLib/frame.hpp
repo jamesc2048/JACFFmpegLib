@@ -46,8 +46,6 @@ public:
 		//return Frame
 		return {};
 	}
-
-
 };
 
 using FramePtr = std::unique_ptr<Frame>;
