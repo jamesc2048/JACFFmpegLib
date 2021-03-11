@@ -1,5 +1,5 @@
 # JACFFmpegLib
-FFmpeg C++ intermediate level wrapper with C interface. 
+FFmpeg C++ intermediate level wrapper
 
 ## Goals
 The goal is to be lower level than for example https://github.com/twitter/vireo, but higher level than making the FFmpeg calls directly. 
@@ -15,3 +15,4 @@ Sensible defaults should be applied whenever needed for essential operation, suc
 - [ ] 1 to 1 VideoFilter (AVFilter graph with single input and single output) - libavfilter
 - [ ] Muxer (output to FFmpeg supported URI, accepts `Packet`s)
 - [ ] Many to many Filter (AVFilter full support)
+- [ ] C wrapper
