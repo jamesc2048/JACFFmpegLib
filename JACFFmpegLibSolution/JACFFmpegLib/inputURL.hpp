@@ -15,6 +15,7 @@ public:
 	{
 		// open format context
 		// throw if can't open
+		
 	}
 
 	~InputUrl()

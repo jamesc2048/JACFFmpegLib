@@ -2,12 +2,7 @@
 
 #include "pch.hpp"
 
-// MOCK
-struct AVFrame
-{
-#define AV_NUM_DATA_POINTERS 8
-	uint8_t* data[AV_NUM_DATA_POINTERS];
-};
+struct AVFrame;
 
 struct AVFrameDeleter
 {
@@ -28,6 +23,10 @@ private:
 	AVFramePtr avframe;
 
 public:
+	Frame()
+	{
+	}
+
 	Frame(AVFramePtr&& fr)
 	{
 		avframe = std::move(fr);
@@ -45,6 +44,7 @@ public:
 	{
 		// TODO copy frame with av_frame_copy()
 		//return Frame
+		return {};
 	}
 
 

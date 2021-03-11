@@ -6,6 +6,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-TEST_CASE("InputURL") {
-	InputUrl input{ };
+TEST_CASE("InputURL") 
+{
+	InputUrl input{ "woah" };
+
+	CHECK(input.url() == "woah");
 }
