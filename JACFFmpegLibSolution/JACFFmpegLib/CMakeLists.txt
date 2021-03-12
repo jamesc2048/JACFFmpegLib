@@ -2,6 +2,7 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.16)
+project(JACFFmpegLib)
 
 option(BUILD_SHARED_LIBS "Build Shared instead of Static" OFF)
 

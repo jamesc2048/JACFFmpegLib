@@ -63,3 +63,5 @@ debug
 
 out/
 .vs/
+
+zig-cache/
