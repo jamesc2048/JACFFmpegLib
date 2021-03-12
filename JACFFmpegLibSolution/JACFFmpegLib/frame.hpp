@@ -2,8 +2,6 @@
 
 #include "pch.hpp"
 
-struct AVFrame;
-
 struct AVFrameDeleter
 {
 	void operator()(AVFrame* fr)
