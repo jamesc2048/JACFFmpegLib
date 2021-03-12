@@ -1,9 +1,11 @@
 #pragma once
 
 // C++ stdlib
+#include <cstdint>
 #include <string> 
 #include <memory> 
 #include <exception>
+#include <vector>
 
 // FFmpeg headers
 extern "C" {

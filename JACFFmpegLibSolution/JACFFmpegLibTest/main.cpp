@@ -15,6 +15,7 @@ TEST_CASE("InputUrl")
 	InputUrl input{ url };
 
 	CHECK(input.url() == url);
+	CHECK(input.streams().size() == 2);
 
 	FramePtr fr = input.nextFrame();
 }

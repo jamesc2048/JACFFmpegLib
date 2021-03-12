@@ -14,7 +14,7 @@ option(BUILD_SHARED_LIBS "Build Shared instead of Static" OFF)
 
 #set(FFMPEG_BASEDIR C:/SDK/FFmpeg/)
 
-message("Build Shared: ${BUILD_SHARED_LIBS}")
+message("JACFFmpegLib Build Shared: ${BUILD_SHARED_LIBS}")
 
 file(GLOB SOURCES *.cpp)
 file(GLOB HEADERS *.hpp)
