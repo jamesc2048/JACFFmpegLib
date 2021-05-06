@@ -5,54 +5,88 @@
 #include "frame.hpp"
 #include "stream.hpp"
 
+#include <stdexcept>
+#include <sstream>
+
+std::string format(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	char* formatted;
+	if (vasprintf(&formatted, format, args) > 0)
+	{
+		std::string result = formatted;
+
+		free(formatted);
+		return result;
+	}
+
+	return {};
+}
+
+class FFmpegException : public std::runtime_error
+{
+private:
+	std::string exceptionText;
+
+public:
+	FFmpegException() = delete;
+	FFmpegException(const std::string& what) = delete;
+
+	FFmpegException(const std::string& what, int ffmpegReturnCode) 
+		: std::runtime_error(what)
+	{
+		// TODO translate AVERROR into text
+		exceptionText = format("FFmpeg error: %s. Return code: %d", what.c_str(), ffmpegReturnCode);
+	}
+
+	virtual ~FFmpegException() = default;
+
+	virtual const char* what() const noexcept override
+	{
+		return exceptionText.c_str();
+	}
+};
+
 class InputUrl
 {
 private:
-	// av format ctx
 	AVFormatContext* mFormatCtx = nullptr;
 	std::vector<StreamPtr> mStreams;
 
 public:
-	InputUrl(std::string_view url)
+	InputUrl(std::string url)
 	{
 		using namespace std::string_literals;
 
-		// Open format
-		int32_t ret = avformat_open_input(&mFormatCtx, url.data(), nullptr, nullptr);
-
-		if (ret < 0)
+		// Open and read format 
+		if (int ret = avformat_open_input(&mFormatCtx, url.c_str(), nullptr, nullptr); ret < 0)
 		{
-			// 0 on success, a negative AVERROR on failure.
-			char errString[1024];
-			std::snprintf(errString, sizeof errString, "Could not open URL \"%s\", ret %d", url.data(), ret);
-			throw std::runtime_error(errString);
+			throw FFmpegException(format("Could not open URL \"%s\"", url.c_str()), ret);
 		}
 
-		// Get stream info
-		ret = avformat_find_stream_info(mFormatCtx, nullptr);
-
-		if (ret < 0)
+		if (int ret = avformat_find_stream_info(mFormatCtx, nullptr); ret < 0)
 		{
-			// >= 0 if OK, AVERROR_xxx on error
-			char errString[1024];
-			std::snprintf(errString, sizeof errString, "Could not find stream info for URL \"%s\", ret %d", url.data(), ret);
-			throw std::runtime_error(errString);
+			throw FFmpegException(format("Could not find stream info for URL \"%s\"", url.c_str()), ret);
 		}
 
-		// Open codecs
+		// Open codecs and create Stream wrapper.
 		for (uint32_t i = 0; i < mFormatCtx->nb_streams; i++)
 		{
-			StreamPtr streamPtr = Stream::make(mFormatCtx->streams[i]);
-
-			if (!streamPtr)
+			try
 			{
-				char errString[1024];
-				std::snprintf(errString, sizeof errString, "Could create stream %d for URL \"%s\", ret %d", i, url.data(), ret);
-				throw std::runtime_error(errString);
-			}
+				StreamPtr streamPtr = Stream::make(mFormatCtx->streams[i]);
 
-			mStreams.emplace_back(std::move(streamPtr));
+				mStreams.emplace_back(std::move(streamPtr));
+			}
+			catch (...)
+			{
+				throw;
+			}
 		}
+
+		// Stream is opened and configured.
 	}
 
 	~InputUrl()
