@@ -1,6 +1,0 @@
-Put FFmpeg build outputs in here (E.G. Zeranoe prebuilt devel + shared).
-For now this only works on 64bit.
-E.G. in this tree you should have folders such as:
-bin
-include
-lib

@@ -12,8 +12,6 @@ option(BUILD_SHARED_LIBS "Build Shared instead of Static" OFF)
 #find_library(LIBAV_AVFORMAT_LIB avformat)
 #find_library(LIBAV_AVUTIL_LIB avutil)
 
-#set(FFMPEG_BASEDIR C:/SDK/FFmpeg/)
-
 message("JACFFmpegLib Build Shared: ${BUILD_SHARED_LIBS}")
 
 file(GLOB SOURCES *.cpp)
@@ -24,10 +22,10 @@ add_library(JACFFmpegLib ${SOURCES} ${HEADERS})
 #target_include_directories(JACFFmpegLib PUBLIC ${FFMPEG_BASEDIR}/include)
 #target_link_directories(JACFFmpegLib PUBLIC ${FFMPEG_BASEDIR}/lib)
 
-set(LIBAV_LIBS avformat avcodec avutil)
+set(LIBAV_LIBS avformat avcodec avutil swscale)
 target_link_libraries(JACFFmpegLib ${LIBAV_LIBS})
 #target_compile_definitions(JACFFmpegLib PRIVATE JACFFMPEGLIB_BUILD)
-set_property(TARGET JACFFmpegLib PROPERTY CXX_STANDARD 20)
+set_property(TARGET JACFFmpegLib PROPERTY CXX_STANDARD 17)
 
 target_precompile_headers(JACFFmpegLib PUBLIC pch.hpp)
 
