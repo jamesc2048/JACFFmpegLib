@@ -3,7 +3,11 @@
 #
 cmake_minimum_required (VERSION 3.16)
 
-project ("JACFFmpegLibSolution")
+project (JACFFmpegLibSolution)
+
+if (WIN32)
+	set(FFMPEG_DEV_ROOT ../../FFmpegLibs)
+endif()
 
 # Include sub-projects.
 add_subdirectory ("JACFFmpegLib")

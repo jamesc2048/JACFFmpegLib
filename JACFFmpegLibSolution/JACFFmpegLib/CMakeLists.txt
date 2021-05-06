@@ -4,26 +4,23 @@
 cmake_minimum_required (VERSION 3.16)
 project(JACFFmpegLib)
 
+# Default to static lib
 option(BUILD_SHARED_LIBS "Build Shared instead of Static" OFF)
-
-# libav libraries common path, check for one
-#find_path(LIBAV_INCLUDE_DIR libavformat/avformat.h)
-
-#find_library(LIBAV_AVFORMAT_LIB avformat)
-#find_library(LIBAV_AVUTIL_LIB avutil)
 
 message("JACFFmpegLib Build Shared: ${BUILD_SHARED_LIBS}")
 
-file(GLOB SOURCES *.cpp)
-file(GLOB HEADERS *.hpp)
+file(GLOB SOURCES CONFIG_REQUIRED *.cpp)
+file(GLOB HEADERS CONFIG_REQUIRED *.hpp)
 
 add_library(JACFFmpegLib ${SOURCES} ${HEADERS})
 
-#target_include_directories(JACFFmpegLib PUBLIC ${FFMPEG_BASEDIR}/include)
-#target_link_directories(JACFFmpegLib PUBLIC ${FFMPEG_BASEDIR}/lib)
+if (FFMPEG_DEV_ROOT)
+	message("Adding custom lib path")
+	target_include_directories(JACFFmpegLib PUBLIC ${FFMPEG_DEV_ROOT}/include)
+	target_link_directories(JACFFmpegLib PUBLIC ${FFMPEG_DEV_ROOT}/lib)
+endif()
 
-set(LIBAV_LIBS avformat avcodec avutil swscale)
-target_link_libraries(JACFFmpegLib ${LIBAV_LIBS})
+target_link_libraries(JACFFmpegLib avutil avformat avcodec swscale)
 #target_compile_definitions(JACFFmpegLib PRIVATE JACFFMPEGLIB_BUILD)
 set_property(TARGET JACFFmpegLib PROPERTY CXX_STANDARD 17)
 

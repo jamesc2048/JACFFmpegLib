@@ -64,4 +64,4 @@ debug
 out/
 .vs/
 
-FFmpegWindowsLibs
+FFmpegDevRoot
