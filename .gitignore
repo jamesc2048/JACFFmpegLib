@@ -64,5 +64,4 @@ debug
 out/
 .vs/
 
-zig-cache/
-FFmpegStaticLibs
+FFmpegWindowsLibs
