@@ -6,7 +6,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-std::string_view url = "/mnt/c/Users/James Crisafulli/Videos/2021-01-12 14-45-20a.mkv";
+std::string url = "/mnt/c/Users/James Crisafulli/Videos/2021-01-12 14-45-20a.mkv";
 
 TEST_CASE("InputUrl") 
 {

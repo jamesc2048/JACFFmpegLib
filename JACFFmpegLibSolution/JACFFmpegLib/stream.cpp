@@ -1,18 +1,13 @@
 #include "stream.hpp"
+#include "videoStream.hpp"
+#include "audioStream.hpp"
 
-StreamType Stream::streamType()
-{
-	return (StreamType)avstream->codecpar->codec_type;
-}
 
 StreamPtr Stream::make(AVStream* avstream)
 {
-	if (!avstream)
-	{
-		return {};
-	}
+	assert(avstream != nullptr);
 
-	StreamPtr stream;
+	StreamPtr stream = {};
 
 	switch (avstream->codecpar->codec_type)
 	{
@@ -25,9 +20,9 @@ StreamPtr Stream::make(AVStream* avstream)
 		break;
 
 	default:
-		return {};
+		// TODO other stream types
+		break;
 	}
-
 
 	return stream;
 }

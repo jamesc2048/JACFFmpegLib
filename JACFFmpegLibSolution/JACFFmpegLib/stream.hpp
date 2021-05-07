@@ -2,13 +2,6 @@
 
 #include "pch.hpp"
 
-enum class StreamType
-{
-	Unknown = AVMEDIA_TYPE_UNKNOWN,
-	Video = AVMEDIA_TYPE_VIDEO,
-	Audio = AVMEDIA_TYPE_AUDIO
-};
-
 class Stream
 {
 	using StreamPtr = std::unique_ptr<Stream>;
@@ -20,10 +13,27 @@ private:
 protected:
 	AVStream* avstream = nullptr;
 	
-	Stream() = default;
+	Stream(AVStream* stream)
+	{
+		avstream = stream;
+	}
 
 public:
-	StreamType streamType();
+	// AVStream common properties
+	AVMediaType type()
+	{
+		return avstream->codecpar->codec_type;
+	}
+
+	int index()
+	{
+		return avstream->index;
+	}
+
+	int bitRate()
+	{
+		return avstream->codecpar->bit_rate;
+	}
 
 	static StreamPtr make(AVStream* stream);
 
@@ -34,32 +44,4 @@ public:
 
 using StreamPtr = std::unique_ptr<Stream>;
 
-class VideoStream : public Stream
-{
-private:
-
-public:
-	VideoStream(AVStream* stream) : Stream()
-	{
-		avstream = stream;
-	}
-
-	~VideoStream() override
-	{
-	}
-};
-
-class AudioStream : public Stream
-{
-private:
-
-public:
-	AudioStream(AVStream* stream) : Stream()
-	{
-		avstream = stream;
-	}
-
-	~AudioStream() override
-	{
-	}
-};
+// TODO other stream types

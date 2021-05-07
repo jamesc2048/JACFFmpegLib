@@ -4,50 +4,11 @@
 
 #include "frame.hpp"
 #include "stream.hpp"
+#include "utils.hpp"
 
 #include <stdexcept>
 #include <sstream>
-
-std::string format(const char *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	char* formatted;
-	if (vasprintf(&formatted, format, args) > 0)
-	{
-		std::string result = formatted;
-
-		free(formatted);
-		return result;
-	}
-
-	return {};
-}
-
-class FFmpegException : public std::runtime_error
-{
-private:
-	std::string exceptionText;
-
-public:
-	FFmpegException() = delete;
-	FFmpegException(const std::string& what) = delete;
-
-	FFmpegException(const std::string& what, int ffmpegReturnCode) 
-		: std::runtime_error(what)
-	{
-		// TODO translate AVERROR into text
-		exceptionText = format("FFmpeg error: %s. Return code: %d", what.c_str(), ffmpegReturnCode);
-	}
-
-	virtual ~FFmpegException() = default;
-
-	virtual const char* what() const noexcept override
-	{
-		return exceptionText.c_str();
-	}
-};
+#include <cstdio>
 
 class InputUrl
 {
@@ -86,12 +47,11 @@ public:
 			}
 		}
 
-		// Stream is opened and configured.
+		// Streams are opened and configured.
 	}
 
 	~InputUrl()
 	{
-		// close input format ctx
 		avformat_close_input(&mFormatCtx);
 	}
 
@@ -107,7 +67,7 @@ public:
 
 	FramePtr nextFrame()
 	{
-		PacketPtr packet = PacketPtr(av_packet_alloc());
+		PacketPtr packet(av_packet_alloc());
 		packet->size = 0;
 		packet->data = nullptr;
 
@@ -124,6 +84,7 @@ public:
 			break;
 
 		default:
+			// unknown error
 			throw std::runtime_error("");
 		}
 

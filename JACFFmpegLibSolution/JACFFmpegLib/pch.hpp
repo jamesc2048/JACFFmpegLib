@@ -1,7 +1,10 @@
 #pragma once
 
-// C++ stdlib
+// C stdlib
+#include <cassert>
 #include <cstdint>
+
+// C++ stdlib
 #include <string> 
 #include <memory> 
 #include <exception>
@@ -15,9 +18,9 @@
 // FFmpeg headers
 extern "C" 
 {
-#include <libavutil/avutil.h>
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
+	#include <libavutil/avutil.h>
+	#include <libavformat/avformat.h>
+	#include <libavcodec/avcodec.h>
 }
 
 #pragma warning(pop)
