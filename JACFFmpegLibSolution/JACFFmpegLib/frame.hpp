@@ -8,9 +8,11 @@ class Frame
 	using FramePtr = std::unique_ptr<Frame>;
 
 private:
-	AVFramePtr avframe;
 
 	Frame() = delete;
+
+protected:
+	AVFramePtr avframe;
 
 public:
 	Frame(AVFramePtr&& fr)
@@ -32,6 +34,8 @@ public:
 		//return Frame
 		return {};
 	}
+
+	virtual AVMediaType type() = 0;
 };
 
 using FramePtr = std::unique_ptr<Frame>;

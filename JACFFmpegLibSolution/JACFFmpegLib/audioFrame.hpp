@@ -11,4 +11,11 @@ class AudioFrame : public Frame
 	~AudioFrame() override
 	{
 	}
+
+	AVMediaType type() override
+	{
+		return AVMEDIA_TYPE_AUDIO;
+	}
 };
+
+using AudioFramePtr = std::unique_ptr<AudioFrame>;
