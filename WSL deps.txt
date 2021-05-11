@@ -1,1 +1,1 @@
-sudo apt install libavformat-dev libavcodec-dev libavutil-dev libswscale-dev
+sudo apt install libavformat-dev libavcodec-dev libavutil-dev libswscale-dev cmake ninja-build
