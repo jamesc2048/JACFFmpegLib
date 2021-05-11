@@ -1,14 +1,14 @@
 
 #include "JACFFmpegLib.hpp"
 
-#include <iostream>
+#include <memory>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
 TEST_CASE("InputUrl")
 {
-	std::string url = "Test/testFile.mp4";
+	std::string url = "/mnt/d/secureReturn 2020-06-14 12_37-38671263712.mp4";
 
 	av_log_set_level(AV_LOG_TRACE);
 
@@ -26,19 +26,20 @@ TEST_CASE("InputUrl")
 	{
 		fr = input->nextFrame();
 
-		if (fr->type() == 0)
+		REQUIRE(fr);
+
+		if (fr->type() == AVMEDIA_TYPE_VIDEO)
 		{
 			break;
 		}
 	}
 
-	REQUIRE(fr);
+	// TODO factory function to cast pointer
+	VideoFrame* videoFrame = (VideoFrame*)fr.get();
 
-	//VideoFramePtr
-
-	CHECK(fr->width() == 720);
-	CHECK(fr->height() == 576);
-	CHECK(fr->format() == AV_PIX_FMT_YUV420P);
+	CHECK(videoFrame->width() == 720);
+	CHECK(videoFrame->height() == 576);
+	CHECK(videoFrame->format() == AV_PIX_FMT_YUV420P);
 }
 
 TEST_CASE("InputUrl-NonExistant")
